@@ -19,7 +19,7 @@ app.configure(function(){
 });
 
 app.configure('development', function(){
-  app.use(express.errorHandler({ dumpExceptions: true, showStack: true })); 
+  app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });
 
 app.configure('production', function(){
@@ -28,11 +28,15 @@ app.configure('production', function(){
 
 // Routes
 
-app.get('/', function(req, res){
-  res.render('index', {
-    title: 'Express'
-  });
+app.post('/emails', function(req, res) {
+    console.log(req);
+    res.json({id: -1});
 });
 
-app.listen(3000);
+app.get('/emails', function(req, res){
+    var emails = [];// TODO Email.findAll();
+    res.json(emails);
+});
+
+app.listen(process.env.PORT, "0.0.0.0");
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
