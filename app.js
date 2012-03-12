@@ -8,10 +8,12 @@ var express = require('express');
 var app = module.exports = express.createServer();
 
 var ContextIO = require('contextio');
-var ctxioClient = new ContextIO.Client({
+var ctxio = new ContextIO.Client({
   key: process.env.CTXIO_KEY,
   secret: process.env.CTXIO_SECRET
 });
+
+var path = require('path');
 
 // Configuration
 
@@ -33,10 +35,23 @@ app.configure('production', function(){
 // Routes
 
 app.get('/emails', function(req, res){
-	ctxioClient.accounts(process.env.CTXIO_ACCT_ID).messages().get({include_body:1}, function (err, response) {
+	ctxio.accounts(process.env.CTXIO_ACCT_ID).messages().get({include_body:1}, function (err, response) {
 	    if (err) throw err;
 		var emails = response.body;
 	    res.json(emails);
+	});
+});
+
+app.get('/attachments/:id', function(req, res) {
+	var fileID = req.params.id;
+	var filepath = path.join(__dirname, 'attachments', fileID);
+	// TODO check if file already exists so that we don't get billed for unnecessary file downloads from context.io
+	ctxio.accounts(process.env.CTXIO_ACCT_ID).files(fileID).content().get(filepath, function(err, response) {
+		if (response.statusCode === 200) {
+			res.download(filepath, 'application.pdf'); // TODO display in browser instead of downloading
+		} else {
+			res.send(response.statusCode);
+		}
 	});
 });
 
