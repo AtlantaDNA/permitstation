@@ -15,6 +15,8 @@ var ctxio = new ContextIO.Client({
 
 var path = require('path');
 
+var fs = require('fs');
+
 // Configuration
 
 app.configure(function(){
@@ -45,12 +47,19 @@ app.get('/emails', function(req, res){
 app.get('/attachments/:id', function(req, res) {
 	var fileID = req.params.id;
 	var filepath = path.join(__dirname, 'attachments', fileID);
-	// TODO check if file already exists so that we don't get billed for unnecessary file downloads from context.io
-	ctxio.accounts(process.env.CTXIO_ACCT_ID).files(fileID).content().get(filepath, function(err, response) {
-		if (response.statusCode === 200) {
+	fs.stat(filepath, function(err, stats) {
+		if (stats && stats.isFile()) {
+			console.log('stats is file');
 			res.download(filepath, 'application.pdf'); // TODO display in browser instead of downloading
 		} else {
-			res.send(response.statusCode);
+			ctxio.accounts(process.env.CTXIO_ACCT_ID).files(fileID).content().get(filepath, function(err, response) {
+				if (response.statusCode === 200) {
+					res.download(filepath, 'application.pdf'); // TODO display in browser instead of downloading
+				} else {
+					fs.unlink(filepath); // delete temporary file if attachment with fileID doesn't exist in inbox
+					res.send(response.statusCode);
+				}
+			});
 		}
 	});
 });
