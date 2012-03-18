@@ -20,6 +20,9 @@ var fs = require('fs');
 // Configuration
 
 app.configure(function(){
+  //app.set('views', __dirname + '/views');
+  app.set('view engine', 'ejs');
+  //app.register('.html', require('ejs'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(app.router);
@@ -36,6 +39,10 @@ app.configure('production', function(){
 
 // Routes
 
+app.get('/', function(req, res) {
+	res.render('index', { layout: false });
+});
+
 app.get('/emails', function(req, res){
 	ctxio.accounts(process.env.CTXIO_ACCT_ID).messages().get({include_body:1}, function (err, response) {
 	    if (err) throw err;
@@ -49,7 +56,6 @@ app.get('/attachments/:id', function(req, res) {
 	var filepath = path.join(__dirname, 'attachments', fileID);
 	fs.stat(filepath, function(err, stats) {
 		if (stats && stats.isFile()) {
-			console.log('stats is file');
 			res.download(filepath, 'application.pdf'); // TODO display in browser instead of downloading
 		} else {
 			ctxio.accounts(process.env.CTXIO_ACCT_ID).files(fileID).content().get(filepath, function(err, response) {

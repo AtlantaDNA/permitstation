@@ -1,0 +1,41 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+	<title>Page Title</title> 
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1"> 
+
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.css" />
+	<link rel="stylesheet" href="/css/jqm-docs.css">
+	<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script src="http://code.jquery.com/mobile/1.1.0-rc.1/jquery.mobile-1.1.0-rc.1.min.js"></script>
+</head> 
+<body> 
+
+<div data-role="page" class="type-interior">
+
+	<div data-role="header">
+		<h1>Permits</h1>
+	</div><!-- /header -->
+
+	<div data-role="content">	
+		<div class="content-primary">
+			<iframe src="https://docs.google.com/viewer?url=http://permitstation.cloudfoundry.com/attachments/4f5fc5093f757e6351000002&embedded=true" width="1024" height="768"><!-- TODO adjust width & height based on media queries --></iframe>
+		</div>
+		<div class="content-secondary">
+			<!--div data-role="collapsible" data-collapsed="true"-->
+				<ul data-role="listview" data-filter="true">
+					<li><a href="#openPDFAttachmentInGoogleDocs">permits@AtlantaGA.gov</a>&nbsp;(date)<br/>(subject)</br>(truncated message)</li>
+					<li><a href="#openPDFAttachmentInGoogleDocs">other@person.com</a>&nbsp;(date)<br/>(subject)</br>(truncated message)</li>
+				</ul>
+			<!--/div-->
+		</div>		
+	</div><!-- /content -->
+
+	<!--div data-role="footer">
+		<h4>Page Footer</h4>
+	</div--><!-- /footer -->
+</div><!-- /page -->
+
+</body>
+</html>
